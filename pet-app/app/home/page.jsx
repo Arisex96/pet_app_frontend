@@ -40,7 +40,7 @@ export default function Home() {
     formData.append('image', registerImage);
 
     try {
-      const response = await axios.post('http://localhost:5000/register', formData, {
+      const response = await axios.post('https://pet-app-backend-qvyi.onrender.com/register', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setAnimalId(response.data.animal_id);
@@ -60,7 +60,7 @@ export default function Home() {
     formData.append('image', searchImage);
 
     try {
-      const response = await axios.post('http://localhost:5000/search', formData, {
+      const response = await axios.post('https://pet-app-backend-qvyi.onrender.com/search', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       setSearchResults(response.data.matches);
