@@ -38,7 +38,7 @@ export default function Home() {
     e.preventDefault();
     const formData = new FormData();
     formData.append('image', registerImage);
-
+  
     try {
       const response = await axios.post('https://pet-app-backend-qvyi.onrender.com/register', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
