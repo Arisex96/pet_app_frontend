@@ -8,6 +8,7 @@ import { Label } from '@/components/ui/label';
 import { ImageIcon, UploadIcon } from 'lucide-react';
 
 export default function Home() {
+  const [error, setError] = useState('');
   const [registerImage, setRegisterImage] = useState(null);
   const [registerPreview, setRegisterPreview] = useState(null);
   const [searchImage, setSearchImage] = useState(null);
