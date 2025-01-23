@@ -62,7 +62,17 @@ export default function Home() {
       setRegisterImage(null);
       setRegisterPreview(null);
     } catch (error) {
-      setError('Error registering animal. Please try again.');
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        setError(`Error registering animal: ${error.response.data.error || 'Unknown error'}`);
+      } else if (error.request) {
+        // The request was made but no response was received
+        setError('No response from the server. Please check your connection.');
+      } else {
+        // Something happened in setting up the request that triggered an error
+        setError(`Error: ${error.message}`);
+      }
       console.error(error);
     }
   };
@@ -79,7 +89,17 @@ export default function Home() {
       });
       setSearchResults(response.data.matches);
     } catch (error) {
-      alert('Error searching for animal');
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        setError(`Error registering animal: ${error.response.data.error || 'Unknown error'}`);
+      } else if (error.request) {
+        // The request was made but no response was received
+        setError('No response from the server. Please check your connection.');
+      } else {
+        // Something happened in setting up the request that triggered an error
+        setError(`Error: ${error.message}`);
+      }
       console.error(error);
     }
   };
