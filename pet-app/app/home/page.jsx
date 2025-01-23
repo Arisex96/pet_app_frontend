@@ -1,32 +1,33 @@
-"use client"
-import { useState } from 'react';
-import axios from 'axios';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { ImageIcon, UploadIcon } from 'lucide-react';
+"use client";
+import { useState } from "react";
+import axios from "axios";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { ImageIcon, UploadIcon } from "lucide-react";
 
 export default function Home() {
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [registerImage, setRegisterImage] = useState(null);
   const [registerPreview, setRegisterPreview] = useState(null);
   const [searchImage, setSearchImage] = useState(null);
   const [searchPreview, setSearchPreview] = useState(null);
   const [searchResults, setSearchResults] = useState([]);
-  const [animalId, setAnimalId] = useState('');
+  const [animalId, setAnimalId] = useState("");
 
   // Handle image preview for registration
   const handleRegisterImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      const allowedTypes = ['image/jpeg', 'image/png'];
+      const allowedTypes = ["image/jpeg", "image/png"];
       if (!allowedTypes.includes(file.type)) {
-        setError('Invalid file type. Only JPEG and PNG are allowed.');
+        setError("Invalid file type. Only JPEG and PNG are allowed.");
         return;
       }
       setRegisterImage(file);
       setRegisterPreview(URL.createObjectURL(file));
+      setError(""); // Clear any previous errors
     }
   };
 
@@ -36,27 +37,28 @@ export default function Home() {
     if (file) {
       setSearchImage(file);
       setSearchPreview(URL.createObjectURL(file));
+      setError(""); // Clear any previous errors
     }
   };
 
   // Register animal
   const handleRegister = async (e) => {
     e.preventDefault();
-    setError(''); // Clear previous errors
-  
+    setError(""); // Clear previous errors
+
     if (!registerImage) {
-      setError('Please select an image to register.');
+      setError("Please select an image to register.");
       return;
     }
 
-    console.log(registerImage); // Should log the File object
-  
+    console.log(registerImage); // Log the file object
+
     const formData = new FormData();
-    formData.append('image', registerImage); // Ensure this is correct
-  
+    formData.append("image", registerImage); // Ensure this is correct
+
     try {
-      const response = await axios.post('https://git-app-backend.onrender.com/register', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const response = await axios.post("https://git-app-backend.onrender.com/register", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
       setAnimalId(response.data.animal_id);
       alert(`Animal registered successfully! ID: ${response.data.animal_id}`);
@@ -66,10 +68,10 @@ export default function Home() {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        setError(`Error registering animal: ${error.response.data.error || 'Unknown error'}`);
+        setError(`Error registering animal: ${error.response.data.error || "Unknown error"}`);
       } else if (error.request) {
         // The request was made but no response was received
-        setError('No response from the server. Please check your connection.');
+        setError("No response from the server. Please check your connection.");
       } else {
         // Something happened in setting up the request that triggered an error
         setError(`Error: ${error.message}`);
@@ -81,22 +83,29 @@ export default function Home() {
   // Search animal
   const handleSearch = async (e) => {
     e.preventDefault();
+    setError(""); // Clear previous errors
+
+    if (!searchImage) {
+      setError("Please select an image to search.");
+      return;
+    }
+
     const formData = new FormData();
-    formData.append('image', searchImage);
+    formData.append("image", searchImage);
 
     try {
-      const response = await axios.post('https://git-app-backend.onrender.com/search', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
+      const response = await axios.post("https://git-app-backend.onrender.com/search", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
       setSearchResults(response.data.matches);
     } catch (error) {
       if (error.response) {
         // The request was made and the server responded with a status code
         // that falls out of the range of 2xx
-        setError(`Error registering animal: ${error.response.data.error || 'Unknown error'}`);
+        setError(`Error searching for animal: ${error.response.data.error || "Unknown error"}`);
       } else if (error.request) {
         // The request was made but no response was received
-        setError('No response from the server. Please check your connection.');
+        setError("No response from the server. Please check your connection.");
       } else {
         // Something happened in setting up the request that triggered an error
         setError(`Error: ${error.message}`);
@@ -109,6 +118,13 @@ export default function Home() {
     <div className="min-h-screen bg-gray-50 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-4xl mx-auto">
         <h1 className="text-4xl font-bold text-center text-green-600 mb-8">Animal Face ID System</h1>
+
+        {/* Error Message */}
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+            {error}
+          </div>
+        )}
 
         {/* Register Section */}
         <Card className="mb-8">
