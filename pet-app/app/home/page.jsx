@@ -19,6 +19,11 @@ export default function Home() {
   const handleRegisterImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
+      const allowedTypes = ['image/jpeg', 'image/png'];
+      if (!allowedTypes.includes(file.type)) {
+        setError('Invalid file type. Only JPEG and PNG are allowed.');
+        return;
+      }
       setRegisterImage(file);
       setRegisterPreview(URL.createObjectURL(file));
     }
@@ -36,9 +41,18 @@ export default function Home() {
   // Register animal
   const handleRegister = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append('image', registerImage);
+    setError(''); // Clear previous errors
+  
+    if (!registerImage) {
+      setError('Please select an image to register.');
+      return;
+    }
 
+    console.log(registerImage); // Should log the File object
+  
+    const formData = new FormData();
+    formData.append('image', registerImage); // Ensure this is correct
+  
     try {
       const response = await axios.post('https://git-app-backend.onrender.com/register', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
@@ -48,7 +62,7 @@ export default function Home() {
       setRegisterImage(null);
       setRegisterPreview(null);
     } catch (error) {
-      alert('Error registering animal');
+      setError('Error registering animal. Please try again.');
       console.error(error);
     }
   };
